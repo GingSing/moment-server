@@ -51,9 +51,14 @@ app.use((req, res, next) => {
   console.log(req);
   res.status(200).json({
     success: false,
-    req,
   });
   next(new ApiError(httpStatus.NOT_FOUND, "Not Found"));
+});
+
+app.use((req, res, next) => {
+  res.status(200).json({
+    next: true,
+  });
 });
 
 module.exports = app;
