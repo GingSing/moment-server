@@ -11,7 +11,7 @@ const path = require("path");
 const app = express();
 
 // set security HTTP headers
-// app.use(helmet());
+app.use(helmet({ contentSecurityPolicy: false }));
 
 //parse json request body
 app.use(
