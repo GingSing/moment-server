@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install app dependencies
-RUN yarn add
+RUN yarn install
 
 # Copy the current directory contents into the container at /app
 COPY . .
