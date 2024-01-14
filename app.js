@@ -39,7 +39,7 @@ app.use(compression());
 // enable cors
 // app.use(cors(corsOptions));
 app.use(cors());
-app.options("*", cors());
+// app.options("*", cors());
 
 // v1 api routes
 app.use("/v1", routes);
@@ -48,7 +48,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // send 404 response to unknown api request
 app.use((req, res, next) => {
-  console.log(req);
   next(new ApiError(httpStatus.NOT_FOUND, "Not Found"));
 });
 
