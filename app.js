@@ -48,7 +48,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // send 404 response to unknown api request
 app.use((req, res, next) => {
-  console.log(JSON.stringify(req));
+  console.log(req);
   next(new ApiError(httpStatus.NOT_FOUND, "Not Found"));
 });
 
