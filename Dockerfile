@@ -13,8 +13,8 @@ RUN yarn install
 # Copy the current directory contents into the container at /
 COPY . .
 
-# Make port 3000 available to the world outside this container
-EXPOSE 3000
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
 
 # Run the server when the container launches
 CMD ["node", "."]
