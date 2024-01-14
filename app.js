@@ -29,15 +29,16 @@ app.use(express.urlencoded({ extended: true }));
 // gzip compression
 app.use(compression());
 
-const corsOptions = {
-  origin: true,
-  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-  allowedHeaders: "Content-Type",
-  credentials: true,
-};
+// const corsOptions = {
+//   origin: true,
+//   methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+//   allowedHeaders: "Content-Type",
+//   credentials: true,
+// };
 
 // enable cors
-app.use(cors(corsOptions));
+// app.use(cors(corsOptions));
+app.use(cors());
 app.options("*", cors());
 
 // v1 api routes
