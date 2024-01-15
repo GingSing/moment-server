@@ -11,7 +11,6 @@ const defaultRoutes = [
 ];
 
 defaultRoutes.forEach((route) => {
-  console.log("creating default routes");
   router.use(route.path, route.route);
 });
 

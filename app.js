@@ -6,7 +6,7 @@ const httpStatus = require("http-status");
 const routes = require("./routes/v1");
 const ApiError = require("./utils/ApiError");
 const path = require("path");
-// const cookieParser = require("cookie-parser");
+const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -21,7 +21,7 @@ app.use(
 );
 
 //parse cookie response
-// app.use(cookieParser());
+app.use(cookieParser());
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
@@ -29,17 +29,16 @@ app.use(express.urlencoded({ extended: true }));
 // gzip compression
 app.use(compression());
 
-// const corsOptions = {
-//   origin: true,
-//   methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
-//   allowedHeaders: "Content-Type",
-//   credentials: true,
-// };
+const corsOptions = {
+  origin: true,
+  methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
+  allowedHeaders: "Content-Type",
+  credentials: true,
+};
 
 // enable cors
-// app.use(cors(corsOptions));
-app.use(cors());
-// app.options("*", cors());
+app.use(cors(corsOptions));
+app.options("*", cors());
 
 // v1 api routes
 app.use("/v1", routes);
@@ -48,17 +47,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // send 404 response to unknown api request
 app.use((req, res, next) => {
-  console.log(req);
-  res.status(200).json({
-    success: false,
-  });
   next(new ApiError(httpStatus.NOT_FOUND, "Not Found"));
-});
-
-app.use((req, res, next) => {
-  res.status(200).json({
-    next: true,
-  });
 });
 
 module.exports = app;
