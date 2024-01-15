@@ -6,7 +6,6 @@ const httpStatus = require("http-status");
 const routes = require("./routes/v1");
 const ApiError = require("./utils/ApiError");
 const path = require("path");
-const cookieParser = require("cookie-parser");
 
 const app = express();
 
@@ -19,9 +18,6 @@ app.use(
     limit: "10mb",
   })
 );
-
-//parse cookie response
-app.use(cookieParser());
 
 // parse urlencoded request body
 app.use(express.urlencoded({ extended: true }));
