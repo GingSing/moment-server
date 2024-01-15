@@ -11,7 +11,7 @@ const cookieParser = require("cookie-parser");
 const app = express();
 
 // set security HTTP headers
-app.use(helmet({ contentSecurityPolicy: false }));
+app.use(helmet());
 
 //parse json request body
 app.use(
