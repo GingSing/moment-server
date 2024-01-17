@@ -1,4 +1,5 @@
 const express = require("express");
+const session = require("express-session");
 const helmet = require("helmet");
 const compression = require("compression");
 const cors = require("cors");
@@ -24,6 +25,14 @@ app.use(express.urlencoded({ extended: true }));
 
 // gzip compression
 app.use(compression());
+
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 const corsOptions = {
   origin: true,
