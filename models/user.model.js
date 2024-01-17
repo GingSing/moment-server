@@ -5,7 +5,7 @@ module.exports = {
     try {
       return db.transaction(() => {
         const findUserStmt = db.prepare(`
-          SELECT users.id, users.username, users.email, oauth_tokens.accessToken, oauth_tokens.refreshToken, oauth_tokens.expiresAt
+          SELECT users.user_id, users.username, users.email, oauth_tokens.accessToken, oauth_tokens.refreshToken, oauth_tokens.expiresAt
           FROM users
           JOIN oauth_tokens ON oauth_tokens.user_id = users.user_id
           WHERE users.oauth_user_id=@oAuthUserId AND users.email=@email
