@@ -33,7 +33,12 @@ const findOrCreateUser = async (req, res) => {
       expiresAt: Date.now() + expires_in * 1000,
     });
 
-    const { accessToken, refreshToken, ...rest } = user;
+    const {
+      user_id: userId,
+      access_token: accessToken,
+      refresh_token: refreshToken,
+      ...rest
+    } = user;
 
     // Set tokens for authentication
     req.session.user = user;

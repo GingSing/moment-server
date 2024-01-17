@@ -5,7 +5,7 @@ module.exports = {
     try {
       return db.transaction(() => {
         const findUserStmt = db.prepare(`
-          SELECT users.user_id, users.username, users.email, oauth_tokens.accessToken, oauth_tokens.refreshToken, oauth_tokens.expiresAt
+          SELECT users.user_id, users.username, users.email, oauth_tokens.access_token, oauth_tokens.refresh_token, oauth_tokens.expires_at
           FROM users
           JOIN oauth_tokens ON oauth_tokens.user_id = users.user_id
           WHERE users.oauth_user_id=@oAuthUserId AND users.email=@email
@@ -14,13 +14,13 @@ module.exports = {
         const insertUserStmt = db.prepare(`
             INSERT INTO users (username, email, oauth_provider, oauth_user_id)
             VALUES (@username, @email, @oAuthProvider, @oAuthUserId)
-            RETURNING id, username, email
+            RETURNING user_id, username, email
         `);
 
         const insertOAuthStmt = db.prepare(`
             INSERT INTO oauth_tokens (user_id, access_token, refresh_token, expires_at)
             VALUES (@userId, @accessToken, @refreshToken, @expiresAt)
-            RETURNING accessToken, refreshToken, expiresAt
+            RETURNING access_token, refresh_token, expires_at
         `);
         const foundUser = findUserStmt.get(user);
         if (foundUser) return foundUser;
@@ -47,7 +47,7 @@ module.exports = {
     try {
       const updateTokenStmt = db.prepare(`
         UPDATE oauth_tokens
-        SET accessToken=@accessToken
+        SET access_token=@accessToken
         WHERE user_id=@userId
       `);
 
