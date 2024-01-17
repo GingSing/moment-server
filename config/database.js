@@ -6,7 +6,7 @@ const dbFile = "moment.db";
 const dbOptions = { verbose: console.log };
 const db = new Database(dbFile, dbOptions);
 
-const migrationDirectory = "./migrations";
+const migrationDirectory = path.join(__dirname, "./migrations");
 const migrationFiles = fs
   .readdirSync(migrationDirectory)
   .filter((file) => file.endsWith(".sql"))
@@ -15,6 +15,7 @@ const migrationFiles = fs
 for (const migrationFile of migrationFiles) {
   try {
     const migrationPath = path.join(migrationDirectory, migrationFile);
+    console.log("migration", migrationPath);
     const migrationSql = fs.readFileSync(migrationPath, "utf8");
 
     db.transaction(() => {

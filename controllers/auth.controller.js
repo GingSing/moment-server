@@ -3,7 +3,7 @@ const {
   getOAuthTokens,
   getOAuthCodeUrl,
   getOAuthProfileData,
-} = require("../../utils/auth-utils");
+} = require("../utils/auth-utils");
 const { User } = require("../models");
 
 const redirectOAuthToGoogle = (req, res) => {
