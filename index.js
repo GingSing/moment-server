@@ -19,7 +19,7 @@ const exitHandler = () => {
 };
 
 const unexpectedErrorHandler = (error) => {
-  console.log("Unexpected Error has occurred.", error);
+  console.error("Unexpected Error has occurred.", error);
   exitHandler();
 };
 
