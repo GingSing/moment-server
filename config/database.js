@@ -15,7 +15,6 @@ const migrationFiles = fs
 for (const migrationFile of migrationFiles) {
   try {
     const migrationPath = path.join(migrationDirectory, migrationFile);
-    console.log("migration", migrationPath);
     const migrationSql = fs.readFileSync(migrationPath, "utf8");
 
     db.transaction(() => {

@@ -3,6 +3,7 @@ const {
   getOAuthTokens,
   getOAuthCodeUrl,
   getOAuthProfileData,
+  refreshOAuthToken,
 } = require("../utils/auth-utils");
 const { User } = require("../models");
 
@@ -22,7 +23,6 @@ const findOrCreateUser = async (req, res) => {
 
     const { sub, name, given_name, picture, email, email_verified, locale } =
       userInfo;
-
     const user = await User.findOrCreate({
       username: name,
       email: email,
@@ -33,8 +33,15 @@ const findOrCreateUser = async (req, res) => {
       expiresAt: Date.now() + expires_in * 1000,
     });
 
+    const { accessToken, refreshToken, ...rest } = user;
+
+    // Set tokens for authentication
+    req.session.user = user;
+    req.session.accessToken = accessToken;
+    req.session.refreshToken = refreshToken;
+
     return res.status(httpStatus.OK).json({
-      user,
+      user: { ...rest },
     });
   } catch (err) {
     console.error("Error occurred during authentication:", err);
@@ -44,7 +51,27 @@ const findOrCreateUser = async (req, res) => {
   }
 };
 
+const refreshToken = async (req, res) => {
+  try {
+    const { data } = await refreshOAuthToken({
+      refreshToken: req.session.refreshToken,
+    });
+
+    req.session.accessToken = data.access_token;
+    await User.updateAccessToken({
+      user: req.session.user,
+      accessToken: data.access_token,
+    });
+    return res.status(httpStatus.OK).send("Update was successful");
+  } catch (err) {
+    return res
+      .status(httpStatus.INTERNAL_SERVER_ERROR)
+      .send("Internal Server Error");
+  }
+};
+
 module.exports = {
   findOrCreateUser,
   redirectOAuthToGoogle,
+  refreshToken,
 };

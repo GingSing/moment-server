@@ -45,8 +45,23 @@ const getOAuthProfileData = async ({ accessToken }) => {
   return await profileDataResponse.json();
 };
 
+const refreshOAuthToken = async ({ refreshToken }) => {
+  const newAccessTokenResponse = await fetch(
+    `https://oauth.provider.com/token`,
+    {
+      grant_type: "refresh_token",
+      client_id: googleConfig.clientId,
+      client_secret: googleConfig.clientSecret,
+      refreshToken: refreshToken,
+    }
+  );
+
+  return newAccessTokenResponse.json();
+};
+
 module.exports = {
   getOAuthCodeUrl,
   getOAuthTokens,
   getOAuthProfileData,
+  refreshOAuthToken,
 };

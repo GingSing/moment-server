@@ -5,35 +5,55 @@ module.exports = {
     try {
       return db.transaction(() => {
         const findUserStmt = db.prepare(`
-          SELECT username, email 
+          SELECT users.id, users.username, users.email, oauth_tokens.accessToken, oauth_tokens.refreshToken, oauth_tokens.expiresAt
           FROM users
           JOIN oauth_tokens ON oauth_tokens.user_id = users.user_id
-          WHERE users.user_id=@userId AND users.email=@email
+          WHERE users.oauth_user_id=@oAuthUserId AND users.email=@email
         `);
 
         const insertUserStmt = db.prepare(`
             INSERT INTO users (username, email, oauth_provider, oauth_user_id)
             VALUES (@username, @email, @oAuthProvider, @oAuthUserId)
+            RETURNING id, username, email
         `);
 
         const insertOAuthStmt = db.prepare(`
             INSERT INTO oauth_tokens (user_id, access_token, refresh_token, expires_at)
             VALUES (@userId, @accessToken, @refreshToken, @expiresAt)
+            RETURNING accessToken, refreshToken, expiresAt
         `);
-
-        const foundUser = findUserStmt.run(user);
-
-        //TODO make sure this works
+        const foundUser = findUserStmt.get(user);
         if (foundUser) return foundUser;
-        insertUserStmt.run(user);
 
-        return insertOAuthStmt.run({
+        const newUser = insertUserStmt.get(user);
+
+        const newUserOAuth = insertOAuthStmt.get({
           userId: newUser.lastInsertRowid,
           ...user,
         });
-      });
+
+        return {
+          ...newUser,
+          ...newUserOAuth,
+        };
+      })();
     } catch (err) {
       console.error("Error occurred creating user:", err);
+      throw err;
+    }
+  },
+
+  updateAccessToken: (accessTokenData) => {
+    try {
+      const updateTokenStmt = db.prepare(`
+        UPDATE oauth_tokens
+        SET accessToken=@accessToken
+        WHERE user_id=@userId
+      `);
+
+      return updateTokenStmt.run(accessTokenData);
+    } catch (err) {
+      console.error("Error occurred updating access token:", err);
       throw err;
     }
   },
