@@ -28,7 +28,7 @@ module.exports = {
         const newUser = insertUserStmt.get(user);
 
         const newUserOAuth = insertOAuthStmt.get({
-          userId: newUser.lastInsertRowid,
+          userId: newUser.user_id,
           ...user,
         });
 
